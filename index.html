@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMART CAR PARKING SYSTEM</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>SMART CAR PARKING SYSTEM</h1>
+            <h2>Real-Time Parking Management Dashboard</h2>
+        </div>
+        <div class="status-bar">
+            <div class="connection-status">
+                <i class="fas fa-wifi"></i> <span id="firebase-status">Connecting to Firebase...</span>
+            </div>
+            <div class="last-update">
+                <i class="fas fa-clock"></i> Last Update: <span id="last-update-time">--:--:--</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Summary Cards Section -->
+        <section class="summary-section">
+            <div class="summary-card">
+                <div class="card-icon total"><i class="fas fa-car-side"></i></div>
+                <div class="card-data">
+                    <h3>TOTAL SPACES</h3>
+                    <p id="total-spaces">4</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="card-icon available"><i class="fas fa-check-circle"></i></div>
+                <div class="card-data">
+                    <h3>AVAILABLE SPACES</h3>
+                    <p id="available-spaces">-</p>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="card-icon occupied"><i class="fas fa-times-circle"></i></div>
+                <div class="card-data">
+                    <h3>OCCUPIED SPACES</h3>
+                    <p id="occupied-spaces">-</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Overall Status Section -->
+        <section class="overall-status-section">
+            <div id="overall-status" class="overall-status default">
+                LOADING STATUS...
+            </div>
+        </section>
+
+        <!-- Parking Bays Section -->
+        <section class="bays-section">
+            <div class="bay-card" id="bay1-card">
+                <div class="bay-header">BAY 1</div>
+                <div class="bay-icon"><i class="fas fa-car"></i></div>
+                <div class="bay-status" id="bay1-status">LOADING</div>
+            </div>
+            <div class="bay-card" id="bay2-card">
+                <div class="bay-header">BAY 2</div>
+                <div class="bay-icon"><i class="fas fa-car"></i></div>
+                <div class="bay-status" id="bay2-status">LOADING</div>
+            </div>
+            <div class="bay-card" id="bay3-card">
+                <div class="bay-header">BAY 3</div>
+                <div class="bay-icon"><i class="fas fa-car"></i></div>
+                <div class="bay-status" id="bay3-status">LOADING</div>
+            </div>
+            <div class="bay-card" id="bay4-card">
+                <div class="bay-header">BAY 4</div>
+                <div class="bay-icon"><i class="fas fa-car"></i></div>
+                <div class="bay-status" id="bay4-status">LOADING</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Firebase SDK (Compat Version so it works without a local web server) -->
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
+    
+    <!-- App JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
