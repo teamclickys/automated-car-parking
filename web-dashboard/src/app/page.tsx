@@ -9,8 +9,9 @@ import { Car, Clock, CreditCard, ShieldAlert, CheckCircle, Wifi, WifiOff } from 
 type BayState = {
   status: "AVAILABLE" | "OCCUPIED";
   carNumber: number | null;
-  parkingStartTime: number | null;
-  paymentStatus: "WAITING_FOR_PAYMENT" | "PAYMENT_DONE" | null;
+  parkingStartTime?: number | null;
+  timeRemaining?: number | null;
+  paymentStatus: "WAITING_FOR_PAYMENT" | "PAYMENT_DONE" | "PAID" | "NONE" | null;
 };
 
 type EntranceState = {
@@ -51,16 +52,18 @@ export default function Dashboard() {
   });
 
   const [bays, setBays] = useState<Record<string, BayState>>({
-    bay1: { status: "AVAILABLE", carNumber: null, parkingStartTime: null, paymentStatus: null },
-    bay2: { status: "AVAILABLE", carNumber: null, parkingStartTime: null, paymentStatus: null },
-    bay3: { status: "AVAILABLE", carNumber: null, parkingStartTime: null, paymentStatus: null },
-    bay4: { status: "AVAILABLE", carNumber: null, parkingStartTime: null, paymentStatus: null },
+    bay1: { status: "AVAILABLE", carNumber: null, paymentStatus: null },
+    bay2: { status: "AVAILABLE", carNumber: null, paymentStatus: null },
+    bay3: { status: "AVAILABLE", carNumber: null, paymentStatus: null },
+    bay4: { status: "AVAILABLE", carNumber: null, paymentStatus: null },
   });
 
   const [currentTime, setCurrentTime] = useState(Date.now());
+  const [mounted, setMounted] = useState(false);
 
   // Update current time every second for timers
   useEffect(() => {
+    setMounted(true);
     const timer = setInterval(() => setCurrentTime(Date.now()), 1000);
     return () => clearInterval(timer);
   }, []);
@@ -93,9 +96,9 @@ export default function Dashboard() {
     });
   }, []);
 
-  const calculateRemainingTime = (startTime: number | null) => {
-    if (!startTime) return 0;
-    const elapsed = Math.floor((currentTime - startTime) / 1000);
+  const calculateRemainingTime = (bay: BayState) => {
+    if (!bay.parkingStartTime) return 0;
+    const elapsed = Math.floor((currentTime - bay.parkingStartTime) / 1000);
     return Math.max(0, TIME_LIMIT_SECONDS - elapsed);
   };
 
@@ -104,6 +107,8 @@ export default function Dashboard() {
     "GATE_CLOSED", "WAITING_FOR_PAYMENT", "PAYMENT_DONE", "ASSIGNING_SPACE", 
     "CAR_PARKED", "PARKING_TIMER_RUNNING", "TIME_EXPIRED", "CAR_MUST_BE_REMOVED", "CAR_REMOVED"
   ];
+
+  if (!mounted) return null;
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 p-4 md:p-8 font-sans">
@@ -219,9 +224,10 @@ export default function Dashboard() {
             Parking Bays
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {Object.entries(bays).map(([bayId, bay]) => {
+            {["bay1", "bay2", "bay3", "bay4"].map((bayId) => {
+              const bay = bays[bayId] || { status: "AVAILABLE", carNumber: null, paymentStatus: null };
               const isOccupied = bay.status === "OCCUPIED";
-              const remTime = calculateRemainingTime(bay.parkingStartTime);
+              const remTime = calculateRemainingTime(bay);
               const isExpired = isOccupied && remTime === 0;
 
               return (
@@ -252,7 +258,7 @@ export default function Dashboard() {
                       {/* Payment Status */}
                       <div className="flex items-center gap-2 text-sm font-medium">
                         <CreditCard className="w-4 h-4 text-slate-400" />
-                        {bay.paymentStatus === "PAYMENT_DONE" ? (
+                        {(bay.paymentStatus === "PAYMENT_DONE" || bay.paymentStatus === "PAID") ? (
                           <span className="text-green-400">PAYMENT DONE</span>
                         ) : (
                           <span className="text-yellow-400 animate-pulse">WAITING FOR PAYMENT...</span>
