@@ -223,7 +223,7 @@ export default function Dashboard() {
             <CheckCircle className="w-6 h-6 text-green-400" />
             Parking Bays
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
             {["bay1", "bay2", "bay3", "bay4"].map((bayId) => {
               const bay = bays[bayId] || { status: "AVAILABLE", carNumber: null, paymentStatus: null };
               const isOccupied = bay.status === "OCCUPIED";
@@ -231,51 +231,51 @@ export default function Dashboard() {
               const isExpired = isOccupied && remTime === 0;
 
               return (
-                <div key={bayId} className={`relative rounded-xl p-6 border-2 transition-all shadow-lg flex flex-col items-center ${
+                <div key={bayId} className={`relative rounded-xl p-3 md:p-6 border-2 transition-all shadow-lg flex flex-col items-center ${
                   !isOccupied 
                     ? "bg-slate-800/80 border-green-500/50 hover:border-green-400" 
                     : isExpired
                       ? "bg-red-950/40 border-red-500 animate-pulse"
                       : "bg-slate-800 border-orange-500/50"
                 }`}>
-                  <h3 className="text-2xl font-bold text-slate-200 uppercase tracking-widest mb-4">
+                  <h3 className="text-lg md:text-2xl font-bold text-slate-200 uppercase tracking-widest mb-2 md:mb-4">
                     {bayId.replace("bay", "Bay ")}
                   </h3>
                   
                   {!isOccupied ? (
-                    <div className="flex flex-col items-center justify-center py-8">
-                      <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mb-3">
-                        <CheckCircle className="w-8 h-8 text-green-400" />
+                    <div className="flex flex-col items-center justify-center py-4 md:py-8">
+                      <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-green-500/20 flex items-center justify-center mb-2 md:mb-3">
+                        <CheckCircle className="w-6 h-6 md:w-8 md:h-8 text-green-400" />
                       </div>
-                      <span className="text-green-400 font-bold text-xl tracking-wide">AVAILABLE</span>
+                      <span className="text-green-400 font-bold text-sm md:text-xl tracking-wide">AVAILABLE</span>
                     </div>
                   ) : (
-                    <div className="w-full flex flex-col items-center space-y-4">
-                      <div className="bg-orange-500/20 text-orange-400 px-6 py-2 rounded-lg font-bold text-2xl border border-orange-500/30">
+                    <div className="w-full flex flex-col items-center space-y-2 md:space-y-4">
+                      <div className="bg-orange-500/20 text-orange-400 px-3 md:px-6 py-1.5 md:py-2 rounded-lg font-bold text-lg md:text-2xl border border-orange-500/30">
                         Car #{bay.carNumber}
                       </div>
 
                       {/* Payment Status */}
-                      <div className="flex items-center gap-2 text-sm font-medium">
-                        <CreditCard className="w-4 h-4 text-slate-400" />
+                      <div className="flex items-center gap-1 md:gap-2 text-xs md:text-sm font-medium text-center">
+                        <CreditCard className="w-3 h-3 md:w-4 md:h-4 text-slate-400 hidden sm:block" />
                         {(bay.paymentStatus === "PAYMENT_DONE" || bay.paymentStatus === "PAID") ? (
                           <span className="text-green-400">PAYMENT DONE</span>
                         ) : (
-                          <span className="text-yellow-400 animate-pulse">WAITING FOR PAYMENT...</span>
+                          <span className="text-yellow-400 animate-pulse">WAITING<span className="hidden sm:inline"> FOR PAYMENT...</span></span>
                         )}
                       </div>
 
                       {/* Timer section */}
-                      <div className={`w-full p-4 rounded-lg flex flex-col items-center border ${
+                      <div className={`w-full p-2 md:p-4 rounded-lg flex flex-col items-center border ${
                         isExpired ? "bg-red-900/50 border-red-500 text-red-200" : "bg-slate-900/50 border-slate-700 text-slate-300"
                       }`}>
-                        <div className="flex items-center gap-2 mb-1">
-                          <Clock className={`w-4 h-4 ${isExpired ? "text-red-400" : "text-blue-400"}`} />
-                          <span className="text-xs uppercase font-bold tracking-wider opacity-80">
-                            {isExpired ? "Time Expired" : "Time Remaining"}
+                        <div className="flex items-center gap-1 md:gap-2 mb-1">
+                          <Clock className={`w-3 h-3 md:w-4 md:h-4 ${isExpired ? "text-red-400" : "text-blue-400"}`} />
+                          <span className="text-[10px] md:text-xs uppercase font-bold tracking-wider opacity-80 text-center">
+                            {isExpired ? "Expired" : "Remaining"}
                           </span>
                         </div>
-                        <span className={`text-4xl font-mono font-bold ${
+                        <span className={`text-2xl md:text-4xl font-mono font-bold ${
                           isExpired ? "text-red-400" : remTime <= 10 ? "text-orange-400" : "text-blue-300"
                         }`}>
                           {remTime}s
@@ -284,9 +284,9 @@ export default function Dashboard() {
 
                       {/* Expiration Warning */}
                       {isExpired && (
-                        <div className="w-full bg-red-600 text-white p-3 rounded-lg flex items-center justify-center gap-2 font-bold uppercase shadow-[0_0_20px_rgba(220,38,38,0.4)] mt-2">
-                          <ShieldAlert className="w-5 h-5" />
-                          MUST BE REMOVED
+                        <div className="w-full bg-red-600 text-white p-2 md:p-3 rounded-lg flex items-center justify-center gap-1 md:gap-2 font-bold uppercase shadow-[0_0_20px_rgba(220,38,38,0.4)] mt-1 md:mt-2 text-xs md:text-base">
+                          <ShieldAlert className="w-4 h-4 md:w-5 md:h-5 hidden sm:block" />
+                          REMOVE
                         </div>
                       )}
                     </div>
